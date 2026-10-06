@@ -8,7 +8,7 @@ import { RouterLink } from '@angular/router';
   template: `
     <section class="status-container" aria-labelledby="status-heading">
       <div class="header-nav">
-        <a routerLink="/" class="back-link" id="back-home-link"> ← Back to Home </a>
+        <a routerLink="/" class="back-link" id="back-home-link"> ← Back to Workspace </a>
       </div>
 
       <h1 id="status-heading">Runtime & Routing Verification</h1>
@@ -57,7 +57,7 @@ import { RouterLink } from '@angular/router';
       <div class="info-box">
         <h3>GitHub Pages Repository Subpath Note</h3>
         <p>
-          In production, GitHub Pages deploys this starter at
+          In production, GitHub Pages deploys this application at
           <code>https://&lt;owner&gt;.github.io/&lt;repo&gt;/</code>. The GitHub Actions workflow
           injects the exact repository path into <code>--base-href</code> dynamically, so all
           routing, service-worker caching, and relative asset loads succeed regardless of the

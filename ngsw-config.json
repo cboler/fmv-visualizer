@@ -12,7 +12,11 @@
           "/index.html",
           "/manifest.webmanifest",
           "/*.css",
-          "/*.js"
+          "/*.js",
+          "/sample-mission.webm",
+          "/sample-telemetry.csv",
+          "/offline-map.geojson",
+          "/maplibre/*.mjs"
         ]
       }
     },
@@ -23,6 +27,17 @@
       "resources": {
         "files": ["/**/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"]
       }
+    }
+  ],
+  "dataGroups": [
+    {
+      "urls": ["https://tiles.openfreemap.org/**"],
+      "cacheConfig": {
+        "maxAge": "7d",
+        "strategy": "performance",
+        "maxSize": 256
+      },
+      "name": "street-tiles"
     }
   ]
 }

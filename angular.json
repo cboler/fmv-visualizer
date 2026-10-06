@@ -7,7 +7,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "angular-pwa-starter": {
+    "fmv-visualizer": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -32,6 +32,16 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "output": "maplibre",
+                "input": "node_modules/maplibre-gl/dist",
+                "glob": "maplibre-gl-worker.mjs"
+              },
+              {
+                "output": "maplibre",
+                "input": "node_modules/maplibre-gl/dist",
+                "glob": "maplibre-gl-shared.mjs"
               }
             ],
             "styles": ["src/styles.scss"]
@@ -65,10 +75,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "angular-pwa-starter:build:production"
+              "buildTarget": "fmv-visualizer:build:production"
             },
             "development": {
-              "buildTarget": "angular-pwa-starter:build:development"
+              "buildTarget": "fmv-visualizer:build:development"
             }
           },
           "defaultConfiguration": "development"

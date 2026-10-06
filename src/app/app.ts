@@ -14,9 +14,9 @@ interface BeforeInstallPromptEvent extends Event {
   styleUrl: './app.scss',
 })
 export class App implements OnInit, OnDestroy {
-  protected readonly title = signal('Angular PWA Starter');
   protected readonly isOnline = signal(typeof navigator !== 'undefined' ? navigator.onLine : true);
   protected readonly canInstall = signal(false);
+  protected readonly light = signal(false);
 
   private deferredPrompt: BeforeInstallPromptEvent | null = null;
   private onlineListener?: () => void;
@@ -25,6 +25,12 @@ export class App implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (typeof window !== 'undefined') {
+      try {
+        this.light.set(localStorage.getItem('fmv-theme') === 'light');
+      } catch {
+        /* Storage may be unavailable in private browsing. */
+      }
+      document.documentElement.dataset['theme'] = this.light() ? 'light' : 'dark';
       this.onlineListener = () => this.isOnline.set(true);
       this.offlineListener = () => this.isOnline.set(false);
       window.addEventListener('online', this.onlineListener);
@@ -46,6 +52,16 @@ export class App implements OnInit, OnDestroy {
       if (this.installPromptListener) {
         window.removeEventListener('beforeinstallprompt', this.installPromptListener);
       }
+    }
+  }
+
+  protected toggleTheme(): void {
+    this.light.update((value) => !value);
+    document.documentElement.dataset['theme'] = this.light() ? 'light' : 'dark';
+    try {
+      localStorage.setItem('fmv-theme', this.light() ? 'light' : 'dark');
+    } catch {
+      /* Theme still works without persistence. */
     }
   }
 

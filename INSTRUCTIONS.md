@@ -1,6 +1,6 @@
 # Agent Instructions
 
-This repository is an **Angular PWA Starter** optimized for hosting on **GitHub Pages**.
+This repository is an **Frame / Field FMV & Telemetry PWA** optimized for hosting on **GitHub Pages**.
 
 > **Note**: Comprehensive agent guidelines and architectural documentation are maintained in:
 >

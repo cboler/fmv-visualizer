@@ -156,3 +156,11 @@ When recording a new architectural decision, copy and fill out the following tem
 - **Positive**: [What benefits does this decision bring?]
 - **Trade-offs**: [What drawbacks, limitations, or maintenance costs are accepted?]
 ```
+
+## ADR-006: A separate local-first FMV derivation
+
+Accepted, 2026-10-06. Clone the clean starter into fmv-visualizer and remove the clone's origin so the source starter cannot be pushed to accidentally. Preserve its PWA and Pages infrastructure. Native video and Canvas 2D cover playback and attitude; MapLibre, Turf and PapaParse provide the explicitly requested mapping, geometry and CSV functionality. A narrow native SRT parser covers labeled DJI cues without an additional subtitle dependency. Firmware variation is reported through warnings and documented limits.
+
+## ADR-007: Explicit workers, bounded display, and offline schematic
+
+Accepted, 2026-10-06. Copy MapLibre's worker/shared ESM assets through Angular's asset pipeline and configure setWorkerUrl relative to document.baseURI. This avoids dev-optimizer worker URL failures and makes offline/subpath caching explicit. Cap map updates at ~15 Hz and displayed breadcrumbs at ~2,000; retain every accepted record for interpolation. Ship a self-authored sample-region schematic and synthetic video. Online streets use a bounded on-demand tile cache. Files remain session-only; no remote persistence is introduced. The FOV represents a horizontal direction/spread sector, not a terrain-projected footprint.

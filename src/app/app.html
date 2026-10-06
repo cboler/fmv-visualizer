@@ -1,79 +1,33 @@
 <a href="#main-content" class="skip-link">Skip to main content</a>
-
-<div class="app-layout">
-  <header class="app-header" role="banner">
-    <div class="header-inner">
-      <div class="brand">
-        <a routerLink="/" class="brand-link" id="nav-brand-link">
-          <span class="brand-logo" aria-hidden="true">🅰</span>
-          <span class="brand-title">{{ title() }}</span>
-        </a>
-      </div>
-
-      <nav class="app-nav" aria-label="Primary Navigation">
-        <a
-          routerLink="/"
-          routerLinkActive="active"
-          [routerLinkActiveOptions]="{ exact: true }"
-          class="nav-link"
-          id="nav-link-home"
-        >
-          Home
-        </a>
-        <a routerLink="/status" routerLinkActive="active" class="nav-link" id="nav-link-status">
-          Status
-        </a>
-      </nav>
-
-      <div class="header-actions">
-        @if (canInstall()) {
-          <button
-            type="button"
-            class="install-btn"
-            id="install-pwa-btn"
-            (click)="installApp()"
-            aria-label="Install Angular PWA"
-          >
-            ⬇ Install App
-          </button>
-        }
-
-        <div
-          class="network-badge"
-          [class.online]="isOnline()"
-          [class.offline]="!isOnline()"
-          role="status"
-          [attr.aria-label]="
-            isOnline() ? 'Application is online' : 'Application is running offline'
-          "
-        >
-          <span class="dot"></span>
-          <span class="network-text">{{ isOnline() ? 'Online' : 'Offline' }}</span>
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <main id="main-content" class="app-content" role="main">
-    <router-outlet />
-  </main>
-
-  <footer class="app-footer" role="contentinfo">
-    <div class="footer-inner">
-      <p class="footer-text">
-        Angular PWA Starter • Ready for GitHub Pages &amp; PWA Standalone Mode
-      </p>
-      <div class="footer-links">
-        <a
-          href="https://github.com/cboler/angular-pwa-starter"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          GitHub Repository
-        </a>
-        <span class="separator" aria-hidden="true">•</span>
-        <a routerLink="/status">Diagnostics</a>
-      </div>
-    </div>
-  </footer>
-</div>
+<header class="app-header">
+  <a routerLink="/" class="brand"
+    ><img src="icons/mission.svg" width="36" height="36" alt="" /><span
+      >FRAME<span class="brand-accent"> / </span>FIELD</span
+    ></a
+  >
+  <nav aria-label="Primary navigation">
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+      >Workspace</a
+    ><a routerLink="/status" routerLinkActive="active">Diagnostics</a>
+  </nav>
+  <div class="header-actions">
+    <span class="network-badge" role="status"
+      ><i [class.offline]="!isOnline()"></i>{{ isOnline() ? 'Local-first' : 'Offline' }}</span
+    ><button
+      type="button"
+      class="quiet theme-button"
+      (click)="toggleTheme()"
+      [attr.aria-label]="light() ? 'Use dark theme' : 'Use light theme'"
+    >
+      {{ light() ? '◐' : '◑' }}
+    </button>
+    @if (canInstall()) {
+      <button type="button" class="quiet" (click)="installApp()">Install app</button>
+    }
+  </div>
+</header>
+<main id="main-content"><router-outlet /></main>
+<footer class="app-footer">
+  <span>FRAME / FIELD <span class="muted">· Full motion. Clear perspective.</span></span
+  ><span>Client-side geospatial video explorer</span>
+</footer>

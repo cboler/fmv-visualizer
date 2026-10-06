@@ -1,0 +1,165 @@
+<section class="mission-heading">
+  <div>
+    <p class="eyebrow">FMV / TELEMETRY WORKSPACE</p>
+    <h1>Every frame. In context.</h1>
+    <p class="subtitle">Explore the view, the flight, and the story between them.</p>
+  </div>
+  <button type="button" class="quiet" (click)="sample()" [disabled]="busy()">
+    ↺ Load sample mission
+  </button>
+</section>
+<section
+  class="import-zone"
+  [class.dragging]="drag()"
+  (dragover)="dragOver($event)"
+  (dragleave)="drag.set(false)"
+  (drop)="drop($event)"
+  aria-label="Mission file import"
+>
+  <div class="import-symbol" aria-hidden="true">↥</div>
+  <div class="import-copy">
+    <strong>Bring your own mission</strong
+    ><span>Drop a video + telemetry log here. Files stay on this device.</span>
+  </div>
+  <label class="button primary" for="mission-files">{{
+    busy() ? 'Reading telemetry…' : 'Open local files'
+  }}</label
+  ><input
+    id="mission-files"
+    class="visually-hidden"
+    type="file"
+    multiple
+    accept=".mp4,.webm,.csv,.json,.srt"
+    (change)="select($event)"
+    [disabled]="busy()"
+  />
+  <button
+    type="button"
+    class="quiet"
+    (click)="showHelp.set(!showHelp())"
+    [attr.aria-expanded]="showHelp()"
+  >
+    Format guide
+  </button>
+</section>
+@if (showHelp()) {
+  <section class="format-guide">
+    <h2>One video. One timeline.</h2>
+    <p>
+      Choose MP4 or WebM, plus CSV, JSON, or a DJI-style SRT sidecar. You can add them together or
+      one at a time.
+    </p>
+    <code
+      >timestamp,lat,lon,heading,pitch,roll,fov,altitude<br />0,37.805,-122.465,15,-8,0,75,84</code
+    >
+    <p>
+      Times are relative seconds or consistent ISO timestamps (first sample becomes zero). Heading
+      is degrees clockwise from north. Pitch ±90°, roll ±180°, FOV between 0° and 180° (default
+      75°). Altitude is optional, in meters; missing attitude defaults to zero with a warning. JSON
+      accepts an array or <code>{{ '{"frames": [...]}' }}</code
+      >.
+    </p>
+    <p>
+      SRT reads labeled latitude/longitude, GPS(longitude, latitude, altitude), gimbal_yaw/gb_yaw,
+      gimbal_pitch/gb_pitch, and roll. Missing camera fields are reported. Firmware variants may
+      require conversion to CSV.
+    </p>
+    <p>
+      Positive sync offset samples a later telemetry time: telemetry time = video time + offset. The
+      FOV sector shows direction and spread only; its range is adjustable and does not model terrain
+      or camera tilt.
+    </p>
+    <a href="sample-telemetry.csv" download>Download example CSV</a>
+  </section>
+}
+@if (error()) {
+  <p class="message error" role="alert">{{ error() }}</p>
+}
+@for (warning of warnings(); track $index) {
+  <p class="message warning" role="status">{{ warning }}</p>
+}
+<div class="mission-grid">
+  <section class="panel video-panel" aria-labelledby="video-heading">
+    <div class="panel-heading">
+      <div>
+        <span class="eyebrow">01 / VIDEO FEED</span>
+        <h2 id="video-heading">{{ videoName() }}</h2>
+      </div>
+      <span class="live-dot" aria-hidden="true"></span>
+    </div>
+    <app-video-player [source]="source()" [demo]="demo()" [restart]="restart()" />
+  </section>
+  <section class="panel map-panel" aria-labelledby="map-heading">
+    <div class="panel-heading">
+      <div>
+        <span class="eyebrow">02 / GEOSPATIAL VIEW</span>
+        <h2 id="map-heading">Position &amp; field of view</h2>
+      </div>
+      <span class="north-label">N ↑</span>
+    </div>
+    <app-map-viewer />
+  </section>
+</div>
+<section class="telemetry-panel" aria-label="Current telemetry">
+  <div class="telemetry-status">
+    <span class="eyebrow">TELEMETRY</span><strong>{{ telemetry.coverage() }}</strong
+    ><span class="log-name">{{ logName() }}</span>
+  </div>
+  @if (telemetry.frame(); as frame) {
+    <dl class="telemetry-values">
+      <div>
+        <dt>LATITUDE</dt>
+        <dd>{{ frame.lat | number: '1.5-5' }}<small>°</small></dd>
+      </div>
+      <div>
+        <dt>LONGITUDE</dt>
+        <dd>{{ frame.lon | number: '1.5-5' }}<small>°</small></dd>
+      </div>
+      <div>
+        <dt>HEADING</dt>
+        <dd>{{ frame.heading | number: '1.0-1' }}<small>°</small></dd>
+      </div>
+      <div>
+        <dt>PITCH</dt>
+        <dd>{{ frame.pitch | number: '1.0-1' }}<small>°</small></dd>
+      </div>
+      <div>
+        <dt>ROLL</dt>
+        <dd>{{ frame.roll | number: '1.0-1' }}<small>°</small></dd>
+      </div>
+      <div>
+        <dt>ALTITUDE</dt>
+        <dd>
+          {{ frame.altitude === undefined ? '—' : (frame.altitude | number: '1.0-1')
+          }}<small>m</small>
+        </dd>
+      </div>
+    </dl>
+  } @else {
+    <p class="empty-telemetry">
+      Load telemetry to see the position, camera direction, and attitude.
+    </p>
+  }
+  <label class="sync-offset" for="sync-offset"
+    >Sync offset
+    <span
+      ><input
+        id="sync-offset"
+        type="number"
+        min="-86400"
+        max="86400"
+        step="0.1"
+        [value]="telemetry.offset()"
+        (input)="offset($event)"
+      />
+      s</span
+    ></label
+  >
+</section>
+<p class="workspace-note">
+  <span class="privacy-dot" aria-hidden="true">●</span> Local processing · no uploads
+  <span
+    >Offline shell + bundled map. Online streets cache viewed tiles. Reselect local files after
+    reload.</span
+  >
+</p>

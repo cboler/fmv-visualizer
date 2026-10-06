@@ -4,7 +4,7 @@ These instructions apply to this repository and any downstream applications deri
 
 ## Repository Overview
 
-- **Product**: Angular PWA Starter — a clean, mobile-first Progressive Web Application template optimized for static hosting on GitHub Pages.
+- **Product**: Frame / Field — a local-first full-motion video and telemetry geospatial PWA derived from cboler/angular-pwa-starter.
 - **Framework**: Angular (standalone components, inject-based dependency injection, and Angular Signals for reactive state).
 - **PWA & Deployment**: Angular Service Worker (`@angular/service-worker`, `ngsw-config.json`), Web App Manifest (`public/manifest.webmanifest`), dynamic subpath base-href, and SPA routing fallback (`scripts/prepare-pages.mjs` creating `404.html`) via GitHub Actions (`.github/workflows/deploy.yml`).
 - **Architecture Style**: Client-side single-page application with zero server-side runtime dependency. Designed to be branched or forked into specific application domains.
@@ -16,7 +16,7 @@ These instructions apply to this repository and any downstream applications deri
 ## Map of Code
 
 ```
-angular-pwa-starter/
+fmv-visualizer/
 ├── .github/workflows/       # CI validation and GitHub Pages automated deployment
 ├── docs/                    # Architecture, ADRs, roadmaps, and execution plans
 │   ├── ARCHITECTURE.md      # Detailed system architecture and derivation guide
@@ -35,7 +35,7 @@ angular-pwa-starter/
 │   └── prepare-pages.mjs    # Generates 404.html SPA fallback for GitHub Pages
 ├── src/                     # Application source code
 │   ├── app/
-│   │   ├── home/            # Starter placeholder home component (replace in derivations)
+│   │   ├── telemetry.ts     # Parsing, timeline state, and interpolation
 │   │   ├── status/          # PWA diagnostic & base-href verification component
 │   │   ├── app.config.ts    # Application providers (router, service worker, global error listeners)
 │   │   ├── app.routes.ts    # Application route definitions
@@ -124,6 +124,6 @@ All agents and contributors must preserve the following principles:
 ### 4. Derivation Guidance
 
 - When converting this starter into a specific product:
-  - Replace `src/app/home/` with domain-specific features and views.
+  - Maintain the workspace, video player, canvas attitude HUD, telemetry service, and MapLibre viewer as focused domain components.
   - Rebrand metadata in `src/index.html`, `public/manifest.webmanifest`, and icons in `public/icons/`.
   - Update `AGENTS.md`, `docs/ARCHITECTURE.md`, `docs/DECISIONS.md`, and `docs/ROADMAP.md` to reflect the new application domain while retaining the core operational rules.

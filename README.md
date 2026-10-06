@@ -1,136 +1,84 @@
-# Angular PWA Starter
+# Frame / Field
 
-A clean, production-ready, mobile-first **Angular PWA** template repository pre-configured for automated deployment to **GitHub Pages**.
+An Angular 22 PWA for **local full-motion video and geospatial telemetry playback**, derived from [cboler/angular-pwa-starter](https://github.com/cboler/angular-pwa-starter).
 
-## Purpose
+Open a video and its log to inspect synchronized position, heading, pitch, roll, altitude, and a camera FOV sector. The included 30-second **synthetic coastal survey** exercises the entire pipeline without your own files.
 
-Starting a modern Angular Progressive Web Application hosted on GitHub Pages typically requires solving several subtle integration hurdles:
+## Run
 
-- Service worker caching and offline startup behavior
-- Dynamic subpath base href configuration when hosted on `https://<owner>.github.io/<repo>/`
-- Client-side SPA routing fallback on GitHub Pages (preventing 404s on refresh)
-- Mobile-first CSS foundation, touch targets, safe-area insets, and accessibility defaults
-- Multi-viewport smoke tests and linting gates
+Requires a Node.js version supported by Angular 22 and npm; verified with Node 26.8.2 and npm 11.19.1.
 
-This template provides a production-quality, minimal foundation solving these infrastructure requirements out-of-the-box so you can focus immediately on your application.
-
----
-
-## Creating a New Project
-
-To create your own application from this starter:
-
-1. Click the green **"Use this template"** button at the top of this GitHub repository and select **"Create a new repository"**.
-2. Choose your repository name (e.g., `my-angular-app`).
-3. Clone your newly created repository locally:
-   ```bash
-   git clone https://github.com/<your-username>/<your-repo-name>.git
-   cd <your-repo-name>
-   ```
-4. Install dependencies:
-   ```bash
-   npm ci
-   ```
-5. In your GitHub repository settings under **Settings > Pages**, set **Build and deployment > Source** to **GitHub Actions**.
-6. When you push to `main`, the automated workflow builds and deploys your PWA to `https://<your-username>.github.io/<your-repo-name>/`.
-
----
-
-## Local Development
-
-Start the local development server:
-
-```bash
+```powershell
+npm ci
 npm start
 ```
 
-Navigate to `http://localhost:4200/` in your browser. The app will automatically reload when you modify source files.
+Open http://localhost:4200/. Import one MP4/WebM video and one CSV/JSON/SRT log together, or add them individually. Drag and drop is supported. The video and telemetry stay in the browser; no server or upload endpoint is used. Online streets are optional and request map tiles from OpenFreeMap, which can reveal the viewed map region to the tile provider.
 
----
+Controls: play/pause, seek, 0.5–4× speed, HUD toggle, map pan/zoom, follow vehicle, fit route, FOV range, and synchronization offset. Dark and light themes, keyboard focus, and touch controls are supported.
 
-## Validation & Developer Commands
+## Telemetry
 
-Run all quality gates and tests:
+CSV columns (and equivalent JSON keys):
 
-| Command                | Purpose                                                                          |
-| :--------------------- | :------------------------------------------------------------------------------- |
-| `npm start`            | Runs Angular local dev server (`ng serve`)                                       |
-| `npm run build`        | Builds production application with bundle size checks                            |
-| `npm run build:pages`  | Builds production application and generates GitHub Pages `404.html` SPA fallback |
-| `npm test`             | Executes unit tests via Vitest (`ng test --watch=false`)                         |
-| `npm run lint`         | Runs ESLint analysis via Angular ESLint (`ng lint`)                              |
-| `npm run format`       | Formats codebase using Prettier                                                  |
-| `npm run format:check` | Verifies code formatting compliance                                              |
-| `npm run e2e`          | Runs Playwright smoke suite across phone, tablet, and desktop viewports          |
-
----
-
-## GitHub Pages Deployment
-
-Deployment is fully automated via GitHub Actions (`.github/workflows/deploy.yml`).
-
-### Repository-Name Independence
-
-The workflow dynamically resolves your repository's subpath using `actions/configure-pages@v5`:
-
-```bash
-npm run build -- --base-href ${{ steps.pages.outputs.base_path }}/
+```csv
+timestamp,lat,lon,heading,pitch,roll,fov,altitude
+0,37.805,-122.465,15,-8,0,75,84
+5,37.80545,-122.46395,34,-1.35,10.1,75,89.24
 ```
 
-- User/Organization Pages (`https://<owner>.github.io/`) receive `--base-href /`
-- Project Pages (`https://<owner>.github.io/<repo>/`) receive `--base-href /<repo>/`
+- `timestamp` (or `time`): relative seconds from video start, or consistent ISO timestamps. ISO times are aligned to the first sample. Numeric seconds retain their original offset. Use **video time + sync offset = telemetry time** to align tracks.
+- `lat`, `lon`: geographic degrees. Latitude must fit Web Mercator (±85.051129°).
+- `heading`: degrees clockwise from north; normalized into [0, 360).
+- `pitch`: ±90°, `roll`: ±180°. Missing fields default to zero and emit a warning.
+- `fov`: between 0° and 180°, default 75°.
+- `altitude`: optional meters. There is no assumption about sea-level versus relative-height reference.
 
-You never need to hardcode the repository name or your GitHub username.
+JSON accepts an array of objects or `{ "frames": [...] }`. CSV supports quoting and streamed worker parsing. Logs sort by time; duplicate timestamps retain the last record. Invalid records are reported and skipped; an unusable file is rejected without replacing the active mission. Telemetry is capped at **32 MB / 200,000 records** in memory. Video is read through an object URL without loading the entire file into JavaScript memory.
 
-### SPA Client-Side Routing Fallback
+SRT supports DJI-style `[latitude: ...]`, `[longitude: ...]`, `[gb_yaw: ...]` / `gimbal_yaw`, gimbal pitch/roll, relative altitude, and legacy `GPS(longitude, latitude, altitude)` cues. Camera yaw takes precedence over flight yaw. Missing yaw/attitude produces explicit warnings. Firmware-specific formats and Autel variants are not universally supported; convert unsupported logs to CSV/JSON. The synthetic sample and automated SRT fixtures are not real-device validation.
 
-GitHub Pages is a static host that returns a 404 response when a user directly navigates to or refreshes a client-side route (such as `/status`).
+The FOV cone is an **illustrative horizontal sector**, with adjustable 50–2,000 m range. It does not project pitch onto terrain, account for lens calibration, or estimate ground coverage. The HUD uses the available log attitude (preferentially camera attitude for SRT); it is an analysis visualization, not a navigation instrument.
 
-During deployment, `scripts/prepare-pages.mjs` duplicates the generated `dist/browser/index.html` to `dist/browser/404.html`. When GitHub Pages encounters a direct route request, it serves `404.html` with the Angular application bundle and the correct `<base href>`, allowing Angular Router to take control and display the requested route without error.
+## Offline and PWA
 
----
+A production service worker precaches the shell, lazy map code, MapLibre worker assets, synthetic video, sample CSV, and a **self-authored San Francisco schematic map**. Playback, import, attitude, and geospatial overlays work offline after initial installation. Outside the bundled sample region the offline view provides overlays on a plain background. Optional online streets cache up to 256 viewed tiles for seven days; uncached areas need a connection. This does not download an entire region.
 
-## PWA Customization
+Local files remain session-only and must be reselected after reload or leaving the workspace. Only the theme preference persists. Videos and telemetry are never written to an account or uploaded.
 
-To rebrand the starter for your project, replace the following values:
+```powershell
+npm run build:pages
+npm run preview
+```
 
-1. **Application Identity & Document Title**:
-   - `src/index.html`: Update `<title>`, `<meta name="description">`, and `<meta name="theme-color">`.
-   - `src/app/app.ts`: Update the `title` signal.
-2. **Web App Manifest**:
-   - `public/manifest.webmanifest`: Update `name`, `short_name`, `description`, `theme_color`, and `background_color`.
-3. **App Icons**:
-   - `public/icons/`: Replace the PNG icons (sizes 72x72 through 512x512) and maskable icons.
-   - `public/favicon.ico`: Replace the browser favicon.
-4. **Offline Caching Rules**:
-   - `ngsw-config.json`: Adjust static asset groups or add dynamic data API caching groups (`dataGroups`) as needed.
-5. **Application Views**:
-   - Replace placeholder components in `src/app/home/` and `src/app/status/` with your application's domain UI and routes.
+Production preview is at http://localhost:4300/ (or the build's base path). The preview uses the native Node HTTP library. The service worker is enabled only in production; `npm start` is not an offline installation test.
 
----
+For a Pages subpath:
 
-## Documentation & Agent Guides
+```powershell
+npm run build -- --base-href /fmv-visualizer/
+node scripts/prepare-pages.mjs
+npm run check:pwa
+```
 
-Comprehensive documentation and instructions for developers and AI agents:
+The inherited GitHub Pages workflow computes base paths dynamically and preserves the `404.html` SPA fallback. This derivation has **no configured remote and has not been published**. Add your intended repository before using the deployment workflow.
 
-- **[AGENTS.md](AGENTS.md)**: Agent instructions, map of code, commands, quality gates, and guardrails.
-- **[GEMINI.md](GEMINI.md)**: Operational coding rules and the simplicity ladder.
-- **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)**: Detailed system architecture, technology stack, and derivation guidance.
-- **[docs/DECISIONS.md](docs/DECISIONS.md)**: Architectural Decision Records (ADRs).
-- **[docs/ROADMAP.md](docs/ROADMAP.md)**: Starter baseline, derivation onboarding checklist, and roadmap template.
-- **[docs/exec-plans/](docs/exec-plans/active/README.md)**: Structured execution plans (active and completed).
+## Verification
 
----
+```powershell
+npm test -- --watch=false
+npm run lint
+npm run format
+npm run format:check
+npm run build:pages
+npm run e2e
+npm run check:pwa
+```
 
-## Design Philosophy
+The browser suite checks playback/seek synchronization, rate, HUD, CSV worker imports, JSON/SRT, failure preservation, file dropping, missing telemetry, sync offset, coverage status, animation fallback cleanup, diagnostic navigation, themes, touch targets, and overflow across four viewports. `check:pwa` serves the production build, installs its service worker, disconnects the browser, reloads, plays the sample, imports CSV, and verifies an offline diagnostic deep link. Evidence is saved under `docs/evidence/`.
 
-This starter embraces **YAGNI** (You Aren't Gonna Need It) and modern web standards:
+The initial JS/CSS budget stays at 500 kB; MapLibre is a separate lazy chunk. Canvas is resized only when its dimensions change. Map GeoJSON updates are capped at ~15 Hz, and displayed breadcrumbs are limited to ~2,000 points; interpolation keeps the full-resolution timeline. Browser callbacks track decoded video frames, with requestAnimationFrame/timeupdate fallback.
 
-- **Zero unnecessary runtime dependencies**: Standalone Angular components with native browser APIs.
-- **Modern tooling**: Vitest for fast, headless unit tests; Playwright for cross-viewport validation; ESLint + Prettier for code consistency.
-- **Mobile-first baseline**: Built-in safe-area insets, touch targets (>= 44px), responsive typography, and reduced-motion support.
-- **Deliberate separation**: Common PWA and GitHub Pages deployment mechanics are completely solved, leaving architecture and product design entirely to the descendant project.
+Recreate the bundled synthetic video/icons with `node scripts/generate-sample.mjs` Requires Playwright Chromium and ffmpeg (`FFMPEG_PATH`, or the bundled Windows Playwright ffmpeg path). Generated assets are checked in, so ffmpeg is not required to build or run the app.
 
-## License
-
-[MIT](LICENSE)
+See `docs/ARCHITECTURE.md`, `docs/DECISIONS.md`, `docs/ROADMAP.md`, and `Handoff.md` for implementation boundaries and verification evidence.

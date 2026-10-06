@@ -1,0 +1,66 @@
+<div class="video-viewport">
+  <video
+    #video
+    [src]="source()"
+    playsinline
+    preload="auto"
+    (loadedmetadata)="metadata()"
+    (play)="start()"
+    (pause)="stop()"
+    (ended)="stop()"
+    (seeking)="sync()"
+    (seeked)="sync()"
+    (timeupdate)="sync()"
+    (emptied)="reset()"
+    (error)="failed()"
+    aria-label="Mission video"
+  >
+    <track kind="captions" />
+  </video>
+  @if (hud() && telemetry.frame()) {
+    <app-attitude-hud />
+  }
+  <div class="video-topline">
+    <span class="chip">{{ demo() ? 'SYNTHETIC DEMO' : 'LOCAL VIDEO' }}</span
+    ><span class="chip">{{ telemetry.coverage() }}</span>
+  </div>
+  <div class="video-bottomline">
+    <span>CAM 01 · {{ telemetry.frame()?.fov | number: '1.0-0' }}° HFOV</span
+    ><span>{{ clock(telemetry.time()) }}</span>
+  </div>
+</div>
+@if (error()) {
+  <p class="message error" role="alert">{{ error() }}</p>
+}
+<div class="transport">
+  <button
+    type="button"
+    class="play-button"
+    (click)="toggle()"
+    [disabled]="!duration()"
+    [attr.aria-label]="playing() ? 'Pause video' : 'Play video'"
+  >
+    {{ playing() ? 'Ⅱ' : '▶' }}
+  </button>
+  <span class="timecode">{{ clock(telemetry.time()) }} / {{ clock(duration() + 0.5) }}</span>
+  <input
+    class="scrubber"
+    type="range"
+    min="0"
+    [max]="duration()"
+    step="0.01"
+    [value]="telemetry.time()"
+    (input)="seek($event)"
+    [disabled]="!duration()"
+    aria-label="Video timeline"
+  />
+  <select [value]="rate()" (change)="changeRate($event)" aria-label="Playback speed">
+    <option value="0.5">0.5×</option>
+    <option value="1">1×</option>
+    <option value="2">2×</option>
+    <option value="4">4×</option>
+  </select>
+  <button type="button" class="quiet" (click)="hud.set(!hud())" [attr.aria-pressed]="hud()">
+    HUD
+  </button>
+</div>

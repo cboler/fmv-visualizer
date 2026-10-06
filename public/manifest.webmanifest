@@ -1,12 +1,12 @@
 {
-  "name": "Angular PWA Starter",
-  "short_name": "Angular PWA",
-  "description": "A clean, production-ready Angular PWA starter for GitHub Pages.",
+  "name": "Frame / Field · FMV & Telemetry",
+  "short_name": "Frame / Field",
+  "description": "Local video and telemetry, synchronized on a geospatial workspace.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#090d16",
-  "theme_color": "#0f172a",
+  "background_color": "#0d1419",
+  "theme_color": "#0d1419",
   "orientation": "any",
   "icons": [
     {
