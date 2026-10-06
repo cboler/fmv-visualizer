@@ -13,7 +13,7 @@
 - [x] Preserved service worker, subpath deployment and SPA fallback.
 - [x] Unit, lint, format, build, multi-viewport browser and production offline verification.
 - [x] Streamlined header, footer Diagnostics, and vehicle-neutral mission copy.
-- [ ] Public GitHub repository and verified Pages publication.
+- [x] Public GitHub repository and verified Pages publication, including desktop/phone controlled offline playback.
 
 ## Explicit limits
 

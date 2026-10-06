@@ -1,0 +1,36 @@
+{
+  "checkedAt": "2026-10-06T05:54:34.109Z",
+  "url": "https://cboler.github.io/fmv-visualizer/",
+  "deployedSourceCommit": "bee1eccc01fd897f32264c8d61ba3f6d23de318b",
+  "deploymentRun": "https://github.com/cboler/fmv-visualizer/actions/runs/37420643246",
+  "results": [
+    {
+      "name": "desktop",
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "status": 200,
+      "seekLatitude": "37.80635°",
+      "themes": ["dark", "light"],
+      "diagnosticsReload": true,
+      "serviceWorkerState": "NORMAL",
+      "controlledOfflinePlayback": true,
+      "pageErrors": []
+    },
+    {
+      "name": "phone",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "status": 200,
+      "seekLatitude": "37.80635°",
+      "themes": ["dark", "light"],
+      "diagnosticsReload": true,
+      "serviceWorkerState": "NORMAL",
+      "controlledOfflinePlayback": true,
+      "pageErrors": []
+    }
+  ]
+}
