@@ -152,35 +152,12 @@ h2 {
 .brand-accent {
   color: var(--accent);
 }
-.app-header nav {
-  display: flex;
-  gap: 18px;
-}
-.app-header nav a {
-  display: flex;
-  align-items: center;
-  min-height: 44px;
-  color: var(--muted);
-  font-size: 13px;
-}
-.app-header nav a.active {
-  color: var(--text);
-  box-shadow: 0 2px 0 var(--accent);
-}
 .header-actions {
   display: flex;
   align-items: center;
   gap: 10px;
   margin-left: auto;
 }
-.network-badge {
-  color: var(--muted);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 12px;
-}
-.network-badge i,
 .live-dot {
   width: 6px;
   height: 6px;
@@ -188,9 +165,6 @@ h2 {
   border-radius: 100%;
   background: var(--accent);
   box-shadow: 0 0 9px #8ce9c833;
-}
-.network-badge i.offline {
-  background: #eabd77;
 }
 .theme-button {
   width: 44px;
@@ -566,12 +540,19 @@ video {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  align-items: center;
   gap: 12px;
   font-size: 10px;
   color: var(--muted);
 }
 .app-footer span:first-child {
   color: var(--text);
+}
+.app-footer a {
+  color: var(--muted);
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
 }
 .skip-link {
   position: fixed;

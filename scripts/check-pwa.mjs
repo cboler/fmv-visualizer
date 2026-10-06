@@ -72,7 +72,7 @@ try {
   await page.getByRole('link', { name: 'Diagnostics', exact: true }).click();
   await page.reload();
   await page.getByRole('heading', { name: 'Runtime & Routing Verification' }).waitFor();
-  await page.getByRole('link', { name: 'Workspace', exact: true }).click();
+  await page.getByRole('link', { name: 'FRAME / FIELD', exact: true }).click();
   await page.waitForFunction(
     () => document.querySelector('.maplibregl-canvas') && !document.querySelector('.map-message'),
   );

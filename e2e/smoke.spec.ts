@@ -109,7 +109,7 @@ test('responsive layout, both themes, accessible targets and diagnostics route',
       await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
     ).toBe(true);
     const small = await page
-      .locator('button, nav a, .brand, .button, input:not(.visually-hidden), select')
+      .locator('button, .app-footer a, .brand, .button, input:not(.visually-hidden), select')
       .evaluateAll((elements) =>
         elements
           .filter((element) => {
@@ -128,7 +128,7 @@ test('responsive layout, both themes, accessible targets and diagnostics route',
   await expect(page.getByRole('heading', { name: 'Runtime & Routing Verification' })).toBeVisible();
   await page.reload();
   await expect(page.locator('#base-uri-val')).toContainText('http://localhost:4200');
-  await page.getByRole('link', { name: 'Workspace', exact: true }).click();
+  await page.getByRole('link', { name: 'FRAME / FIELD', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Every frame. In context.' })).toBeVisible();
 });
 

@@ -1,5 +1,5 @@
 import { Component, signal, OnInit, OnDestroy } from '@angular/core';
-import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterOutlet, RouterLink } from '@angular/router';
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -9,18 +9,15 @@ interface BeforeInstallPromptEvent extends Event {
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [RouterOutlet, RouterLink],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
 export class App implements OnInit, OnDestroy {
-  protected readonly isOnline = signal(typeof navigator !== 'undefined' ? navigator.onLine : true);
   protected readonly canInstall = signal(false);
   protected readonly light = signal(false);
 
   private deferredPrompt: BeforeInstallPromptEvent | null = null;
-  private onlineListener?: () => void;
-  private offlineListener?: () => void;
   private installPromptListener?: (e: Event) => void;
 
   ngOnInit(): void {
@@ -31,10 +28,6 @@ export class App implements OnInit, OnDestroy {
         /* Storage may be unavailable in private browsing. */
       }
       document.documentElement.dataset['theme'] = this.light() ? 'light' : 'dark';
-      this.onlineListener = () => this.isOnline.set(true);
-      this.offlineListener = () => this.isOnline.set(false);
-      window.addEventListener('online', this.onlineListener);
-      window.addEventListener('offline', this.offlineListener);
 
       this.installPromptListener = (e: Event) => {
         e.preventDefault();
@@ -47,8 +40,6 @@ export class App implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     if (typeof window !== 'undefined') {
-      if (this.onlineListener) window.removeEventListener('online', this.onlineListener);
-      if (this.offlineListener) window.removeEventListener('offline', this.offlineListener);
       if (this.installPromptListener) {
         window.removeEventListener('beforeinstallprompt', this.installPromptListener);
       }

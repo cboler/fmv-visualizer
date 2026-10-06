@@ -13,7 +13,7 @@ export class WorkspaceComponent implements OnDestroy {
   protected readonly telemetry = inject(TelemetryService);
   protected readonly source = signal(new URL('sample-mission.webm', document.baseURI).href);
   protected readonly videoName = signal('Coastal survey · synthetic demo');
-  protected readonly logName = signal('Sample flight · 61 records');
+  protected readonly logName = signal('Sample mission · 61 records');
   protected readonly demo = signal(true);
   protected readonly busy = signal(false);
   protected readonly drag = signal(false);
@@ -52,7 +52,7 @@ export class WorkspaceComponent implements OnDestroy {
     this.warnings.set([]);
     this.source.set(new URL('sample-mission.webm', document.baseURI).href);
     this.videoName.set('Coastal survey · synthetic demo');
-    this.logName.set('Sample flight · 61 records');
+    this.logName.set('Sample mission · 61 records');
     this.demo.set(true);
     this.telemetry.load(sampleTelemetry());
     this.telemetry.time.set(0);

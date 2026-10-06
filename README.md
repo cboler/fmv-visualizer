@@ -61,7 +61,7 @@ node scripts/prepare-pages.mjs
 npm run check:pwa
 ```
 
-The inherited GitHub Pages workflow computes base paths dynamically and preserves the `404.html` SPA fallback. This derivation has **no configured remote and has not been published**. Add your intended repository before using the deployment workflow.
+The GitHub Pages workflow computes base paths dynamically and preserves the `404.html` SPA fallback. Source is hosted at [cboler/fmv-visualizer](https://github.com/cboler/fmv-visualizer), with Actions deployment configured for [Frame / Field](https://cboler.github.io/fmv-visualizer/). Deployment verification is recorded in `Handoff.md`.
 
 ## Verification
 

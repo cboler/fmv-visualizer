@@ -12,7 +12,9 @@
 - [x] Synthetic demo video, sample CSV, bundled schematic and branded install assets.
 - [x] Preserved service worker, subpath deployment and SPA fallback.
 - [x] Unit, lint, format, build, multi-viewport browser and production offline verification.
+- [x] Streamlined header, footer Diagnostics, and vehicle-neutral mission copy.
+- [ ] Public GitHub repository and verified Pages publication.
 
 ## Explicit limits
 
-The synthetic sample is not camera-calibrated real-world proof. SRT support covers common labeled DJI and GPS cue forms; other firmware variants may require conversion. The FOV is an illustrative horizontal sector. Offline streets cover cached tiles only. Video/telemetry are in memory and require reselection after reload. Physical-device/browser compatibility beyond desktop Chromium remains unverified. Publishing to a new repository is a separate action.
+The synthetic sample is not camera-calibrated real-world proof. SRT support covers common labeled DJI and GPS cue forms; other firmware variants may require conversion. The FOV is an illustrative horizontal sector. Offline streets cover cached tiles only. Video/telemetry are in memory and require reselection after reload. Physical-device/browser compatibility beyond desktop Chromium remains unverified. Synchronized 3D vehicle rendering is deferred until after publication and discussion of vehicle type and attitude fields.

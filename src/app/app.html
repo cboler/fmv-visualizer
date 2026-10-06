@@ -5,15 +5,8 @@
       >FRAME<span class="brand-accent"> / </span>FIELD</span
     ></a
   >
-  <nav aria-label="Primary navigation">
-    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
-      >Workspace</a
-    ><a routerLink="/status" routerLinkActive="active">Diagnostics</a>
-  </nav>
   <div class="header-actions">
-    <span class="network-badge" role="status"
-      ><i [class.offline]="!isOnline()"></i>{{ isOnline() ? 'Local-first' : 'Offline' }}</span
-    ><button
+    <button
       type="button"
       class="quiet theme-button"
       (click)="toggleTheme()"
@@ -30,4 +23,5 @@
 <footer class="app-footer">
   <span>FRAME / FIELD <span class="muted">· Full motion. Clear perspective.</span></span
   ><span>Client-side geospatial video explorer</span>
+  <a routerLink="/status">Diagnostics</a>
 </footer>

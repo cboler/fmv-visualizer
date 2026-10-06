@@ -7,9 +7,9 @@ A standalone Angular 22.2 application with signals and a native HTML video clock
 - `telemetry.ts`: typed frames, CSV/JSON/DJI SRT ingestion, validation, deduplication, angular interpolation and singleton timeline state. Imports stage before replacing active state.
 - `workspace.component.ts` / `workspace.html`: mission imports, session object URLs, feedback, synchronization offset and the responsive workspace.
 - `video-player.component.ts` / `video-player.html`: native decoding, playback controls, decoded-frame timestamps, requestAnimationFrame fallback and callback cleanup.
-- `attitude-hud.component.ts`: Canvas 2D ladder, horizon, reticle and compass. Device-pixel-ratio-aware sizing via ResizeObserver. Available log attitude is illustrative rather than a calibrated flight instrument.
+- `attitude-hud.component.ts`: Canvas 2D ladder, horizon, reticle and compass. Device-pixel-ratio-aware sizing via ResizeObserver. Available log attitude is illustrative rather than a calibrated navigation instrument.
 - `map-viewer.component.ts`: lazy MapLibre initialization, explicit same-origin worker URL, Turf sector, separate route/trail/cone/point sources, heading marker, follow/fit controls, optional online vector layer and cleanup.
-- `app.ts` / `app.html`: navigation, network status, theme and native PWA install prompt.
+- `app.ts` / `app.html`: brand home link, footer diagnostics, theme and native PWA install prompt.
 - `app.config.ts`, `ngsw-config.json`, manifest and `scripts/prepare-pages.mjs`: preserved service worker and dynamic subpath hosting infrastructure.
 
 ## Clock and rendering

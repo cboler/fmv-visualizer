@@ -9,12 +9,12 @@ describe('Frame / Field shell', () => {
       providers: [provideRouter([])],
     }).compileComponents();
   });
-  it('renders the brand, navigation, and accessible skip link', async () => {
+  it('renders the brand, footer diagnostics, and accessible skip link', async () => {
     const fixture = TestBed.createComponent(App);
     await fixture.whenStable();
     const element = fixture.nativeElement as HTMLElement;
     expect(element.querySelector('.brand')?.textContent).toContain('FRAME');
-    expect(element.querySelector('nav')?.textContent).toContain('Workspace');
+    expect(element.querySelector('.app-footer a')?.textContent).toContain('Diagnostics');
     expect(element.querySelector('.skip-link')?.getAttribute('href')).toBe('#main-content');
   });
   it('switches themes using the accessible theme button', async () => {

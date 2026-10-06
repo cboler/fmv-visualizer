@@ -2,7 +2,9 @@
 
 ## Delivered
 
-A separate application at `C:/Users/chris/OneDrive/Documents/GitHub/fmv-visualizer`, derived from the clean local `cboler/angular-pwa-starter` checkout. The original starter is untouched. The derivation has no configured origin and is not deployed.
+A separate application at `C:/Users/chris/OneDrive/Documents/GitHub/fmv-visualizer`, derived from the clean local `cboler/angular-pwa-starter` checkout. The original starter is untouched. Origin is configured for [cboler/fmv-visualizer](https://github.com/cboler/fmv-visualizer), with GitHub Actions Pages enabled. Initial deployment verification is pending.
+
+The header uses the brand to return home; the redundant Workspace link and global Local-first indicator are removed. Diagnostics remains available in the footer. Mission wording accommodates aerial and aquatic vehicles. Synchronized 3D vehicle rendering is deferred to the next discussion.
 
 Native MP4/WebM playback synchronizes a Canvas attitude HUD, numerical telemetry and MapLibre position/FOV/breadcrumb overlays. CSV worker parsing, JSON and labeled DJI SRT normalize into typed frames; binary search handles arbitrary seeking and shortest-arc heading/roll/longitude interpolation. Controls include seek/rate, HUD, follow/fit, map pan/zoom, cone range, and sync offset. Imports are staged and preserve the active mission on failure.
 
@@ -25,7 +27,7 @@ A self-authored 30-second synthetic coastal clip, sample CSV and SF schematic pr
 
 `npm start` serves http://localhost:4200/. The local development server remains available at delivery. `npm run build:pages` and `npm run preview` serve production at http://localhost:4300/. `npm run check:pwa` uses a temporary server on port 4301 and closes it afterward.
 
-Read `README.md` for file formats, offset semantics, privacy, PWA setup, and commands. The preserved Pages workflow can publish after a destination repository is configured. No publish operation was performed.
+Read `README.md` for file formats, offset semantics, privacy, PWA setup, and commands. The Pages workflow publishes main to https://cboler.github.io/fmv-visualizer/.
 
 ## Limits and next input
 
