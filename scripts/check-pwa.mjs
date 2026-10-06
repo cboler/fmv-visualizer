@@ -40,6 +40,10 @@ try {
   await page.waitForFunction(
     () => document.querySelector('.maplibregl-canvas') && !document.querySelector('.map-message'),
   );
+  const workerState = await page.evaluate(async () =>
+    (await fetch(new URL('ngsw/state', document.baseURI))).text(),
+  );
+  assert.match(workerState, /Driver state: NORMAL/);
   const liveTile = page.waitForResponse(
     (response) =>
       response.url().includes('tiles.openfreemap.org/planet/') && response.status() === 200,
@@ -83,6 +87,7 @@ try {
     checkedAt: new Date().toISOString(),
     basePath: base,
     controlledOfflineReload: true,
+    serviceWorkerState: 'NORMAL',
     videoPlaybackOffline: true,
     mapWorkerAndFovOffline: true,
     csvWorkerImportOffline: true,

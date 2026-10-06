@@ -164,3 +164,7 @@ Accepted, 2026-10-06. Clone the clean starter into fmv-visualizer and remove the
 ## ADR-007: Explicit workers, bounded display, and offline schematic
 
 Accepted, 2026-10-06. Copy MapLibre's worker/shared ESM assets through Angular's asset pipeline and configure setWorkerUrl relative to document.baseURI. This avoids dev-optimizer worker URL failures and makes offline/subpath caching explicit. Cap map updates at ~15 Hz and displayed breadcrumbs at ~2,000; retain every accepted record for interpolation. Ship a self-authored sample-region schematic and synthetic video. Online streets use a bounded on-demand tile cache. Files remain session-only; no remote persistence is introduced. The FOV represents a horizontal direction/spread sector, not a terrain-projected footprint.
+
+## ADR-008: Complete bundled demo fetch before media decoding
+
+Accepted, 2026-10-06. Public Pages verification exposed a race: a native media range request returned HTTP 206 before Angular prefetch finished, and Cache.put rejected it, degrading the worker. Fetch the small bundled demo as a complete Blob and play its object URL. Reuse existing URL cleanup, ignore stale sample completions after replacement/navigation, and leave large user videos as File object URLs. This adds a 3 MB demo download before initial decoding and avoids a custom service worker or dependencies.

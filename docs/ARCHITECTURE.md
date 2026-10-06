@@ -22,6 +22,8 @@ The HUD follows each decoded video frame. Map source updates cap at ~15 Hz and r
 
 Production caches the shell, map lazy chunk, MapLibre's ESM worker/shared assets, synthetic WebM and sample CSV, plus a self-authored SF schematic. Optional OpenFreeMap streets use a bounded Angular service-worker data cache (256 tiles, seven days). No region download or full-world offline basemap is claimed. Local videos/logs are session-only; returning to the workspace resets to the sample. Theme uses localStorage if available.
 
+The bundled 3 MB WebM is fetched as a complete Blob and played through a session object URL. This avoids HTTP 206 media requests racing Angular's prefetch and degrading the worker on Pages. Imported videos continue to use File object URLs without reading their contents into JavaScript memory.
+
 ## Static hosting and verification
 
 All source asset URLs resolve against document.baseURI. The Pages workflow supplies the repository base href; `prepare-pages.mjs` generates the SPA fallback. `preview.mjs` provides a local production server with video byte ranges, and `check-pwa.mjs` verifies offline shell/video/map/import/deep links against the compiled build. Unit tests cover mathematical and parsing boundaries; E2E tests exercise visible behavior across four viewports and two themes.

@@ -1,7 +1,7 @@
 <div class="video-viewport">
   <video
     #video
-    [src]="source()"
+    [attr.src]="source() || null"
     playsinline
     preload="auto"
     (loadedmetadata)="metadata()"

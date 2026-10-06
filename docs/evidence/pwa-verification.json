@@ -1,7 +1,8 @@
 {
-  "checkedAt": "2026-10-06T05:44:38.352Z",
+  "checkedAt": "2026-10-06T05:51:01.200Z",
   "basePath": "/fmv-visualizer/",
   "controlledOfflineReload": true,
+  "serviceWorkerState": "NORMAL",
   "videoPlaybackOffline": true,
   "mapWorkerAndFovOffline": true,
   "csvWorkerImportOffline": true,

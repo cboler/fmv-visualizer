@@ -11,7 +11,7 @@ import { MapViewerComponent } from './map-viewer.component';
 })
 export class WorkspaceComponent implements OnDestroy {
   protected readonly telemetry = inject(TelemetryService);
-  protected readonly source = signal(new URL('sample-mission.webm', document.baseURI).href);
+  protected readonly source = signal('');
   protected readonly videoName = signal('Coastal survey · synthetic demo');
   protected readonly logName = signal('Sample mission · 61 records');
   protected readonly demo = signal(true);
@@ -23,9 +23,9 @@ export class WorkspaceComponent implements OnDestroy {
   protected readonly restart = signal(0);
   private objectUrl?: string;
   private generation = 0;
+  private sampleGeneration = 0;
   constructor() {
-    this.telemetry.load(sampleTelemetry());
-    this.telemetry.time.set(0);
+    void this.sample();
   }
   protected select(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -45,12 +45,13 @@ export class WorkspaceComponent implements OnDestroy {
     const value = Number((event.target as HTMLInputElement).value);
     if (Number.isFinite(value)) this.telemetry.offset.set(Math.min(86400, Math.max(-86400, value)));
   }
-  protected sample(): void {
+  protected async sample(): Promise<void> {
+    const token = ++this.sampleGeneration;
     this.generation++;
     this.busy.set(false);
     this.error.set('');
     this.warnings.set([]);
-    this.source.set(new URL('sample-mission.webm', document.baseURI).href);
+    this.source.set('');
     this.videoName.set('Coastal survey · synthetic demo');
     this.logName.set('Sample mission · 61 records');
     this.demo.set(true);
@@ -58,6 +59,19 @@ export class WorkspaceComponent implements OnDestroy {
     this.telemetry.time.set(0);
     this.releaseUrl();
     this.restart.update((value) => value + 1);
+    try {
+      // Only the bundled 3 MB demo is fully fetched. This avoids uncachable HTTP 206 responses
+      // racing Angular's prefetch; large user videos still use File object URLs directly.
+      const response = await fetch(new URL('sample-mission.webm', document.baseURI));
+      if (!response.ok) throw new Error('The sample video could not be loaded. Try a local video.');
+      const blob = await response.blob();
+      if (token !== this.sampleGeneration || !this.demo()) return;
+      this.objectUrl = URL.createObjectURL(blob);
+      this.source.set(this.objectUrl);
+    } catch (error) {
+      if (token === this.sampleGeneration && this.demo())
+        this.error.set(error instanceof Error ? error.message : 'The sample video is unavailable.');
+    }
   }
   private async importFiles(files: File[]): Promise<void> {
     if (!files.length) return;
@@ -117,6 +131,7 @@ export class WorkspaceComponent implements OnDestroy {
   }
   ngOnDestroy(): void {
     this.generation++;
+    this.sampleGeneration++;
     this.releaseUrl();
   }
 }
